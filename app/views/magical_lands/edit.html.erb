@@ -1,0 +1,40 @@
+<% if flash[:notice] %>
+  <p><%= flash[:notice] %></p>
+<% end %>
+
+<h1>Edit a magical land</h1>
+
+<%= form_for @magical_land do |f| %>
+  <div>
+    <%= f.label :name %>
+    <%= f.text_field :name %>
+    <br>
+  </div>
+
+  <div>
+    <%= f.label :universe %>
+    <%= f.text_field :universe %>
+    <br>
+  </div>
+
+  <div>
+    <%= f.label :secret_code, 'Secret code' %>
+    <%= f.text_field :secret_code %>
+    <br>
+  </div>
+
+  <div>
+    <%= f.label :picture, 'Picture of the land' %>
+    <%= f.file_field :picture %>
+    <br>
+  </div>
+
+  <div>
+    <%= f.label :deadly, 'Deadly?' %> <br>
+    <% ["Yes", "No", "Sometimes"].each do |key| %>
+      <%= f.radio_button :deadly, key %> <%= key %> <br>
+    <% end %>
+  </div>
+
+  <div><%= f.submit "Update land" %></div>
+<% end %>

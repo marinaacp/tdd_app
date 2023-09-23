@@ -74,4 +74,22 @@ RSpec.feature "MagicalLands", type: :feature do
     visit(magical_lands_path)
     expect(page).to have_content(magical_land1.name).and have_content(magical_land2.name)
   end
+
+  scenario "Updates a magical land" do
+    magical_land = MagicalLand.create!(
+      name: Faker::Fantasy::Tolkien.location,
+      universe: Faker::Fantasy::Tolkien.location,
+      secret_code: Faker::PhoneNumber.phone_number,
+      deadly: ["Yes", "No", "Sometimes"].sample,
+      picture: "#{Rails.root}/spec/fixtures/magical_land.jpg"
+    )
+
+    new_name = Faker::Fantasy::Tolkien.location
+    visit(edit_magical_land_path(magical_land.id))
+    fill_in("Name", with: new_name)
+    click_on("Update land")
+
+    expect(page).to have_content("New land updated with success")
+    expect(page).to have_content(new_name)
+  end
 end

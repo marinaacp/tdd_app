@@ -1,4 +1,5 @@
 class MagicalLandsController < ApplicationController
+  before_action :set_magical_land, only: [:edit, :update, :show]
   def index
     @magical_lands = MagicalLand.all
   end
@@ -17,9 +18,26 @@ class MagicalLandsController < ApplicationController
   end
 
   def show
+    #
+  end
+
+  def edit
+    #
+  end
+
+  def update
+    if @magical_land.update!(new_land_params)
+      redirect_to magical_land_path(@magical_land.id), notice: "New land updated with success"
+    else
+      redirect_to edit_magical_land_path(@magical_land.id), notice: "Error updating the magical land"
+    end
+  end
+
+  private
+
+  def set_magical_land
     @magical_land = MagicalLand.find(params[:id])
   end
-  private
 
   def new_land_params
     params.require(:magical_land).permit(:name, :universe, :secret_code, :picture, :deadly)
