@@ -92,4 +92,34 @@ RSpec.feature "MagicalLands", type: :feature do
     expect(page).to have_content("New land updated with success")
     expect(page).to have_content(new_name)
   end
+
+  scenario "Click on link show" do
+    magical_land = MagicalLand.create!(
+      name: Faker::Fantasy::Tolkien.location,
+      universe: Faker::Fantasy::Tolkien.location,
+      secret_code: Faker::PhoneNumber.phone_number,
+      deadly: ["Yes", "No", "Sometimes"].sample,
+      picture: "#{Rails.root}/spec/fixtures/magical_land.jpg"
+    )
+
+    visit(magical_lands_path)
+    find(:xpath, "/html/body/table/tbody/tr[1]/td[3]/a").click
+    expect(page).to have_content("Name: #{magical_land.name}")
+  end
+
+  scenario "Click on link edit" do
+    magical_land = MagicalLand.create!(
+      name: Faker::Fantasy::Tolkien.location,
+      universe: Faker::Fantasy::Tolkien.location,
+      secret_code: Faker::PhoneNumber.phone_number,
+      deadly: ["Yes", "No", "Sometimes"].sample,
+      picture: "#{Rails.root}/spec/fixtures/magical_land.jpg"
+    )
+
+    visit(magical_lands_path)
+    find(:xpath, "/html/body/table/tbody/tr[1]/td[2]/a").click
+    expect(page).to have_content("Edit a magical land")
+  end
+
+  
 end

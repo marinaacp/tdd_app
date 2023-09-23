@@ -3,9 +3,25 @@
 <% end %>
 <h1>List of magical lands</h1>
 
-<% @magical_lands.each do |ml| %>
-  <%= link_to ml.name, magical_land_path(ml.id) %>
-<% end %>
+<table>
+  <thead>
+    <tr>
+      <td>Name</td>
+      <td></td>
+      <td></td>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @magical_lands.each do |ml| %>
+      <tr>
+        <td><%= ml.name %></td>
+        <td><%= link_to "Edit", edit_magical_land_path(ml.id) %></td>
+        <td><%= link_to "Show", magical_land_path(ml.id) %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
 
 <ul>
   <li><%= link_to "New magical land", new_magical_land_path %></li>
