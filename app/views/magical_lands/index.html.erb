@@ -1,0 +1,8 @@
+<% if flash[:notice] %>
+  <p><%= flash[:notice] %></p>
+<% end %>
+<h1>List of magical lands</h1>
+
+<ul>
+  <li><%= link_to "New magical land", new_magical_land_path %></li>
+</ul>

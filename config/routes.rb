@@ -3,4 +3,5 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   root to: "welcome#index"
+  resources :magical_lands
 end
