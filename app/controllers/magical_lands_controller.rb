@@ -11,13 +11,16 @@ class MagicalLandsController < ApplicationController
     if @magical_land.save
       redirect_to magical_lands_path, notice: "New land successfully registered!"
     else
-      render :new
+      redirect_to new_magical_land_path, notice: "Field can't be blank"
     end
   end
 
+  def show
+    @magical_land = MagicalLand.find(params[:id])
+  end
   private
 
   def new_land_params
-    params.require(:magical_land).permit(:name, :universe, :secret_code, :avatar, :deadly)
+    params.require(:magical_land).permit(:name, :universe, :secret_code, :picture, :deadly)
   end
 end

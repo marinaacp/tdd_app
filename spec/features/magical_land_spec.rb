@@ -19,7 +19,7 @@ RSpec.feature "MagicalLands", type: :feature do
     expect(page).to have_content("New magical land")
   end
 
-  scenario "Register e a new valid magical land" do
+  scenario "Register e a new valid magical land" do # Happy path
     visit(new_magical_land_path)
     land_name = Faker::Fantasy::Tolkien.location
     fill_in('Name', with: land_name)
@@ -31,5 +31,26 @@ RSpec.feature "MagicalLands", type: :feature do
 
     expect(page).to have_content("New land successfully registered!")
     expect(MagicalLand.last.name).to eq(land_name)
+  end
+
+  scenario "Try to register wrongly a new magical land" do # Sad path
+    visit(new_magical_land_path)
+
+    click_on("Register land")
+
+    expect(page).to have_content("Field can't be blank")
+  end
+
+  scenario "Shows a land" do
+    magical_land = MagicalLand.create!(
+      name: Faker::Fantasy::Tolkien.location,
+      universe: Faker::Fantasy::Tolkien.location,
+      secret_code: Faker::PhoneNumber.phone_number,
+      deadly: ["Yes", "No", "Sometimes"].sample,
+      picture: "#{Rails.root}/spec/fixtures/magical_land.jpg"
+    )
+
+    visit(magical_land_path(magical_land.id))
+    expect(page).to have_content(magical_land.name)
   end
 end

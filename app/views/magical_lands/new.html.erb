@@ -1,3 +1,7 @@
+<% if flash[:notice] %>
+  <p><%= flash[:notice] %></p>
+<% end %>
+
 <h1>New magical land</h1>
 
 <%= form_for @magical_land do |f| %>
@@ -20,8 +24,8 @@
   </div>
 
   <div>
-    <%= f.label :avatar, 'Picture of the land' %>
-    <%= f.file_field :avatar %>
+    <%= f.label :picture, 'Picture of the land' %>
+    <%= f.file_field :picture %>
     <br>
   </div>
 

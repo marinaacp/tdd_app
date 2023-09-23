@@ -16,7 +16,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_23_002235) do
     t.string "universe"
     t.string "secret_code"
     t.string "deadly"
-    t.string "avatar"
+    t.string "picture"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

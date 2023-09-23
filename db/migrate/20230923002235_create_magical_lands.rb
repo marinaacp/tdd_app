@@ -5,7 +5,7 @@ class CreateMagicalLands < ActiveRecord::Migration[7.0]
       t.string :universe
       t.string :secret_code
       t.string :deadly
-      t.string :avatar
+      t.string :picture
 
       t.timestamps
     end
