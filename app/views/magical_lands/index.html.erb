@@ -3,6 +3,10 @@
 <% end %>
 <h1>List of magical lands</h1>
 
+<% @magical_lands.each do |ml| %>
+  <%= link_to ml.name, magical_land_path(ml.id) %>
+<% end %>
+
 <ul>
   <li><%= link_to "New magical land", new_magical_land_path %></li>
 </ul>

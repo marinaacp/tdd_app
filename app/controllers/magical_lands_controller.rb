@@ -1,5 +1,6 @@
 class MagicalLandsController < ApplicationController
   def index
+    @magical_lands = MagicalLand.all
   end
 
   def new

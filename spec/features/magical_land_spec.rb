@@ -53,4 +53,25 @@ RSpec.feature "MagicalLands", type: :feature do
     visit(magical_land_path(magical_land.id))
     expect(page).to have_content(magical_land.name)
   end
+
+  scenario "Index shows list of magical lands" do
+    magical_land1 = MagicalLand.create!(
+      name: Faker::Fantasy::Tolkien.location,
+      universe: Faker::Fantasy::Tolkien.location,
+      secret_code: Faker::PhoneNumber.phone_number,
+      deadly: ["Yes", "No", "Sometimes"].sample,
+      picture: "#{Rails.root}/spec/fixtures/magical_land.jpg"
+    )
+
+    magical_land2 = MagicalLand.create!(
+      name: Faker::Fantasy::Tolkien.location,
+      universe: Faker::Fantasy::Tolkien.location,
+      secret_code: Faker::PhoneNumber.phone_number,
+      deadly: ["Yes", "No", "Sometimes"].sample,
+      picture: "#{Rails.root}/spec/fixtures/magical_land.jpg"
+    )
+
+    visit(magical_lands_path)
+    expect(page).to have_content(magical_land1.name).and have_content(magical_land2.name)
+  end
 end
