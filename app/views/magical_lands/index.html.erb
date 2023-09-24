@@ -18,6 +18,8 @@
         <td><%= ml.name %></td>
         <td><%= link_to "Edit", edit_magical_land_path(ml.id) %></td>
         <td><%= link_to "Show", magical_land_path(ml.id) %></td>
+        <td><%= link_to "Delete", ml, method: :delete, data: { turbo_method: :delete } %></td>
+        <%# <td><%= link_to "Delete", ml, method: :delete, data: { turbo_method: :delete, turbo_confirm: 'I want to delete this land' } %>
       </tr>
     <% end %>
   </tbody>

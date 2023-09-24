@@ -1,5 +1,6 @@
 class MagicalLandsController < ApplicationController
-  before_action :set_magical_land, only: [:edit, :update, :show]
+  before_action :set_magical_land, only: [:edit, :update, :show, :destroy]
+
   def index
     @magical_lands = MagicalLand.all
   end
@@ -30,6 +31,14 @@ class MagicalLandsController < ApplicationController
       redirect_to magical_land_path(@magical_land.id), notice: "New land updated with success"
     else
       redirect_to edit_magical_land_path(@magical_land.id), notice: "Error updating the magical land"
+    end
+  end
+
+  def destroy
+    if @magical_land.destroy
+      redirect_to magical_lands_path, notice: "Magical land deleted successfully"
+    else
+      redirect_to magical_land_path(@magical_land.id), notice: "Unable to deleted magical land"
     end
   end
 
