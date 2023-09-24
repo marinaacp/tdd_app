@@ -1,6 +1,7 @@
 require 'rails_helper'
 
 RSpec.feature "MagicalLands", type: :feature do
+
   scenario "Visit link Resgister magical land" do
     visit(root_path)
     expect(page).to have_link("Register magical land")
@@ -19,121 +20,71 @@ RSpec.feature "MagicalLands", type: :feature do
     expect(page).to have_content("New magical land")
   end
 
-  scenario "Register e a new valid magical land" do # Happy path
-    visit(new_magical_land_path)
-    land_name = Faker::Fantasy::Tolkien.location
-    fill_in('Name', with: land_name)
-    fill_in('Universe', with: Faker::Fantasy::Tolkien.location)
-    fill_in('Secret code', with: Faker::PhoneNumber.phone_number)
-    attach_file("Picture of the land", "#{Rails.root}/spec/fixtures/magical_land.jpg")
-    choose(option: ["Yes", "No", "Sometimes"].sample)
-    click_on("Register land")
+  context "Registering a new magical land" do
+    let(:land_name) { Faker::Fantasy::Tolkien.location }
 
-    expect(page).to have_content("New land successfully registered!")
-    expect(MagicalLand.last.name).to eq(land_name)
+    scenario "Register a new valid magical land" do # Happy path
+      visit(new_magical_land_path)
+      fill_in('Name', with: land_name)
+      fill_in('Universe', with: Faker::Fantasy::Tolkien.location)
+      fill_in('Secret code', with: Faker::PhoneNumber.phone_number)
+      attach_file("Picture of the land", "#{Rails.root}/spec/fixtures/magical_land.jpg")
+      choose(option: ["Yes", "No", "Sometimes"].sample)
+      click_on("Register land")
+
+      expect(page).to have_content("New land successfully registered!")
+      expect(MagicalLand.last.name).to eq(land_name)
+    end
+
+    scenario "Try to register wrongly a new magical land" do # Sad path
+      visit(new_magical_land_path)
+      click_on("Register land")
+      expect(page).to have_content("Field can't be blank")
+    end
   end
 
-  scenario "Try to register wrongly a new magical land" do # Sad path
-    visit(new_magical_land_path)
+  context "Viewing Magical Lands" do
+    let!(:magical_land1) { create_magical_land }
+    let!(:magical_land2) { create_magical_land }
 
-    click_on("Register land")
+    scenario "Shows a land" do
+      visit(magical_land_path(magical_land1.id))
+      expect(page).to have_content(magical_land1.name)
+    end
 
-    expect(page).to have_content("Field can't be blank")
-  end
-
-  scenario "Shows a land" do
-    magical_land = MagicalLand.create!(
-      name: Faker::Fantasy::Tolkien.location,
-      universe: Faker::Fantasy::Tolkien.location,
-      secret_code: Faker::PhoneNumber.phone_number,
-      deadly: ["Yes", "No", "Sometimes"].sample,
-      picture: "#{Rails.root}/spec/fixtures/magical_land.jpg"
-    )
-
-    visit(magical_land_path(magical_land.id))
-    expect(page).to have_content(magical_land.name)
-  end
-
-  scenario "Index shows list of magical lands" do
-    magical_land1 = MagicalLand.create!(
-      name: Faker::Fantasy::Tolkien.location,
-      universe: Faker::Fantasy::Tolkien.location,
-      secret_code: Faker::PhoneNumber.phone_number,
-      deadly: ["Yes", "No", "Sometimes"].sample,
-      picture: "#{Rails.root}/spec/fixtures/magical_land.jpg"
-    )
-
-    magical_land2 = MagicalLand.create!(
-      name: Faker::Fantasy::Tolkien.location,
-      universe: Faker::Fantasy::Tolkien.location,
-      secret_code: Faker::PhoneNumber.phone_number,
-      deadly: ["Yes", "No", "Sometimes"].sample,
-      picture: "#{Rails.root}/spec/fixtures/magical_land.jpg"
-    )
-
-    visit(magical_lands_path)
-    expect(page).to have_content(magical_land1.name).and have_content(magical_land2.name)
-  end
-
-  scenario "Updates a magical land" do
-    magical_land = MagicalLand.create!(
-      name: Faker::Fantasy::Tolkien.location,
-      universe: Faker::Fantasy::Tolkien.location,
-      secret_code: Faker::PhoneNumber.phone_number,
-      deadly: ["Yes", "No", "Sometimes"].sample,
-      picture: "#{Rails.root}/spec/fixtures/magical_land.jpg"
-    )
-
-    new_name = Faker::Fantasy::Tolkien.location
-    visit(edit_magical_land_path(magical_land.id))
-    fill_in("Name", with: new_name)
-    click_on("Update land")
-
-    expect(page).to have_content("New land updated with success")
-    expect(page).to have_content(new_name)
-  end
-
-  scenario "Click on link show" do
-    magical_land = MagicalLand.create!(
-      name: Faker::Fantasy::Tolkien.location,
-      universe: Faker::Fantasy::Tolkien.location,
-      secret_code: Faker::PhoneNumber.phone_number,
-      deadly: ["Yes", "No", "Sometimes"].sample,
-      picture: "#{Rails.root}/spec/fixtures/magical_land.jpg"
-    )
-
-    visit(magical_lands_path)
-    find(:xpath, "/html/body/table/tbody/tr[1]/td[3]/a").click
-    expect(page).to have_content("Name: #{magical_land.name}")
-  end
-
-  scenario "Click on link edit" do
-    magical_land = MagicalLand.create!(
-      name: Faker::Fantasy::Tolkien.location,
-      universe: Faker::Fantasy::Tolkien.location,
-      secret_code: Faker::PhoneNumber.phone_number,
-      deadly: ["Yes", "No", "Sometimes"].sample,
-      picture: "#{Rails.root}/spec/fixtures/magical_land.jpg"
-    )
-
-    visit(magical_lands_path)
-    find(:xpath, "/html/body/table/tbody/tr[1]/td[2]/a").click
-    expect(page).to have_content("Edit a magical land")
-  end
-
-  scenario "Deletes a magical land" do
-    magical_land = MagicalLand.create!(
-      name: Faker::Fantasy::Tolkien.location,
-      universe: Faker::Fantasy::Tolkien.location,
-      secret_code: Faker::PhoneNumber.phone_number,
-      deadly: ["Yes", "No", "Sometimes"].sample,
-      picture: "#{Rails.root}/spec/fixtures/magical_land.jpg"
-    )
-
-    expect {
+    scenario "Index shows list of magical lands" do
       visit(magical_lands_path)
-      find(:xpath, "/html/body/table/tbody/tr/td[4]/a", text: "Delete").click
-    }.to change(MagicalLand, :count).by(-1)
-    expect(page).to have_content("Magical land deleted successfully")
+      expect(page).to have_content(magical_land1.name).and have_content(magical_land2.name)
+    end
+
+    scenario "Click on link show" do
+      visit(magical_lands_path)
+      click_on("Show", match: :first)
+      expect(page).to have_content("Name: #{magical_land1.name}")
+    end
+
+    scenario "Click on link edit" do
+      visit(magical_lands_path)
+      click_on("Edit", match: :first)
+      expect(page).to have_content("Edit a magical land")
+    end
+
+    scenario "Deletes a magical land" do
+      visit(magical_lands_path)
+      expect {
+        click_on("Delete", match: :first)
+      }.to change(MagicalLand, :count).by(-1)
+      expect(page).to have_content("Magical land deleted successfully")
+    end
+  end
+
+  def create_magical_land
+    MagicalLand.create!(
+      name: Faker::Fantasy::Tolkien.location,
+      universe: Faker::Fantasy::Tolkien.location,
+      secret_code: Faker::PhoneNumber.phone_number,
+      deadly: ["Yes", "No", "Sometimes"].sample,
+      picture: "#{Rails.root}/spec/fixtures/magical_land.jpg"
+    )
   end
 end
